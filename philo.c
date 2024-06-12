@@ -12,9 +12,26 @@
 
 #include "philo.h"
 
+void	ft_edit(t_philo *philo)
+{
+	pthread_mutex_lock(philo->monitor->mutex_flag);
+	philo->monitor->flag = 0;
+	pthread_mutex_unlock(philo->monitor->mutex_flag);
+}
+
 int	ft_lock_flag(int *number, pthread_mutex_t *mutex)
 {
 	int	tmp;
+
+	pthread_mutex_lock(mutex);
+	tmp = *number;
+	pthread_mutex_unlock(mutex);
+	return (tmp);
+}
+
+size_t	ft_lock_flag_sizet(size_t *number, pthread_mutex_t *mutex)
+{
+	size_t	tmp;
 
 	pthread_mutex_lock(mutex);
 	tmp = *number;
@@ -42,6 +59,16 @@ void	ft_fork(t_philo *philo)
 	ft_print_message("is thinking", philo);
 	first_take = philo->fork_right;
 	second_take = philo->fork_left;
+	// if (philo->monitor->number_of_philo == 1)
+	// {
+	// 	pthread_mutex_lock(first_take);
+	// 	ft_print_message("has taken a fork", philo);
+	// 	pthread_mutex_unlock(first_take);
+	// 	ft_usleep(philo->monitor->time_to_die);
+	// 	ft_print_message("dead", philo);
+	// 	ft_edit(philo);
+	// 	return;
+	// }
 	if (philo->id % 2)
 	{
 		first_take = philo->fork_left;
@@ -83,13 +110,15 @@ int	ft_check(t_philo *philo)
 {
 	int	i;
 	int	flag;
+	int	count;
 
+	
 	i = 0;
 	flag = 1;
 	while (i < philo->monitor->number_of_philo)
 	{
-		if (ft_lock_flag(&philo[i].counter,
-				philo->monitor->counter) < philo->monitor->eat)
+		count = ft_lock_flag(&philo[i].counter, philo->monitor->counter);
+		if (count < philo->monitor->eat)
 			flag = 0;
 		i++;
 	}
@@ -101,31 +130,26 @@ void	*ft_monitor(void *ff)
 	t_philo	*philo;
 	int		number_of_philo;
 	int		i;
+	size_t	last;
 
 	philo = (t_philo *)ff;
 	number_of_philo = philo[0].monitor->number_of_philo;
 	i = 0;
-	while (1)
+	while (1 && number_of_philo > 1)
 	{
 		if (i == number_of_philo)
 			i = 0;
-		pthread_mutex_lock(philo->monitor->mutex_time);
-		if (philo[i].last_eat && time_of_day()
-			- philo[i].last_eat > philo[i].monitor->time_to_die)
+		last = ft_lock_flag_sizet(&philo[i].last_eat,
+				philo->monitor->mutex_time);
+		if (last && time_of_day() - last > philo[i].monitor->time_to_die)
 		{
 			ft_print_message("dead", &philo[i]);
-			pthread_mutex_lock(philo->monitor->mutex_flag);
-			philo[i].monitor->flag = 0;
-			pthread_mutex_unlock(philo->monitor->mutex_flag);
-			pthread_mutex_unlock(philo->monitor->mutex_time);
+			ft_edit(philo);
 			break ;
 		}
-		pthread_mutex_unlock(philo->monitor->mutex_time);
-		if (ft_check(philo))
+		if (ft_check(philo) && philo->monitor->eat != 0)
 		{
-			pthread_mutex_lock(philo->monitor->mutex_flag);
-			philo[i].monitor->flag = 0;
-			pthread_mutex_unlock(philo->monitor->mutex_flag);
+			ft_edit(philo);
 			break ;
 		}
 		i++;
@@ -152,9 +176,6 @@ int	main(int ac, char **av)
 		pthread_create(&philo[i].thread, NULL, &ft_routine, &philo[i]);
 		i++;
 	}
-	// pthread_mutex_lock(philo->monitor->mutex_flag);
-	// philo->monitor->flag = 1;
-	// pthread_mutex_unlock(philo->monitor->mutex_flag);
 	i = 0;
 	pthread_create(&monitor, NULL, &ft_monitor, philo);
 	pthread_join(monitor, NULL);
@@ -166,10 +187,10 @@ int	main(int ac, char **av)
 	i = 0;
 	while (i < number_of_philo)
 	{
-		pthread_mutex_destroy(philo[i].fork_left);
+		pthread_mutex_destroy(philo[i].fork_right);
 		i++;
 	}
-	// pthread_mutex_destroy(philo->monitor->mutex_flag);
-	// pthread_mutex_destroy(philo->monitor->mutex_print);
-	// pthread_mutex_destroy(philo->monitor->mutex_time);
+	pthread_mutex_destroy(philo->monitor->mutex_flag);
+	pthread_mutex_destroy(philo->monitor->mutex_print);
+	pthread_mutex_destroy(philo->monitor->mutex_time);
 }

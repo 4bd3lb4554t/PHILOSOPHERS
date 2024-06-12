@@ -121,7 +121,8 @@ t_philo	*ft_creat_data(char **av)
 		philo[i].monitor = monitor;
 		philo[i].full_eat = 0;
 		philo[i].counter = 0;
-		philo[i].fork_left = &(mxt[(i + 1) % number_of_philo]);
+		if (number_of_philo > 1)
+			philo[i].fork_left = &(mxt[(i + 1) % number_of_philo]);
 		philo[i].fork_right = &(mxt[i]);
 		philo[i].id = i + 1;
 		philo[i].time = time;
