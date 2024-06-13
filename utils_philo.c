@@ -6,7 +6,7 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:21:51 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/13 17:22:10 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:57:35 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	check_is_number(char **str)
 	{
 		str[i] = ft_remove_0(str[i]);
 		it = ft_itoa(ft_atoi(str[i]));
-		if (strcmp(it, str[i]))
+		if (strcmp(it, str[i]) || ft_atoi(str[i]) == 0) // strcmp 
 			return (free(it), 1);
 		free(it);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 15:36:54 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/13 17:34:21 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:56:57 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,27 @@ void	*ft_monitor(void *ff)
 	return (NULL);
 }
 
+void ft_destory(t_philo *philo)
+{
+	int num = philo->monitor->number_of_philo;
+	int i = 0;
+	while(i < num)
+	{
+		pthread_mutex_destroy(philo[i].fork_left );
+		i++;
+	}
+	pthread_mutex_destroy(philo->monitor->mutex_print );
+	pthread_mutex_destroy(philo->monitor->mutex_flag );
+	pthread_mutex_destroy(philo->monitor->counter );
+	pthread_mutex_destroy(philo->monitor->mutex_time );
+	free(philo->monitor->mutex_print );
+	free(philo->monitor->mutex_flag );
+	free(philo->monitor->counter );
+	free(philo->monitor->mutex_time );
+	
+	
+}
+
 void	ft_philo(char **av)
 {
 	t_philo		*philo;
@@ -114,12 +135,16 @@ void	ft_philo(char **av)
 		pthread_join(philo[i].thread, NULL);
 		i++;
 	}
+	ft_destory(philo);
 }
 
 int	main(int ac, char **av)
 {
 	(void)ac;
-	if (check_is_number(av))
+	if (check_is_number(av) )
+	{
+		write(2, "Error\n", ft_strlen("Error\n"));
 		return (1);
+	}
 	ft_philo(av);
 }
