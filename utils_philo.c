@@ -25,7 +25,6 @@ size_t	time_of_day(void)
 void	ft_usleep(size_t time)
 {
 	size_t	prev;
-
 	prev = time_of_day() + time;
 	while (1)
 	{

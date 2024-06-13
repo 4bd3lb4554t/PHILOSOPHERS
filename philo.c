@@ -59,16 +59,16 @@ void	ft_fork(t_philo *philo)
 	ft_print_message("is thinking", philo);
 	first_take = philo->fork_right;
 	second_take = philo->fork_left;
-	// if (philo->monitor->number_of_philo == 1)
-	// {
-	// 	pthread_mutex_lock(first_take);
-	// 	ft_print_message("has taken a fork", philo);
-	// 	pthread_mutex_unlock(first_take);
-	// 	ft_usleep(philo->monitor->time_to_die);
-	// 	ft_print_message("dead", philo);
-	// 	ft_edit(philo);
-	// 	return;
-	// }
+	if (philo->monitor->number_of_philo == 1)
+	{
+		pthread_mutex_lock(first_take);
+		ft_print_message("has taken a fork", philo);
+		pthread_mutex_unlock(first_take);
+		ft_usleep(philo->monitor->time_to_die);
+		ft_print_message("dead", philo);
+		ft_edit(philo);
+		return ;
+	}
 	if (philo->id % 2)
 	{
 		first_take = philo->fork_left;
@@ -112,7 +112,6 @@ int	ft_check(t_philo *philo)
 	int	flag;
 	int	count;
 
-	
 	i = 0;
 	flag = 1;
 	while (i < philo->monitor->number_of_philo)

@@ -9,7 +9,7 @@ OBJECTS_LIBFT = $(SRC_libft:.c=.o)
 
 CC = cc
  
-CFLAGS = -Wall -Wextra -Werror 	 -fsanitize=thread -g3
+CFLAGS = -Wall -Wextra -Werror 	# -fsanitize=thread -g3
 
 all: $(NAME) 
 	@rm -rf *.o
