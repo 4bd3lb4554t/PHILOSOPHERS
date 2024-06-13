@@ -1,0 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_helper.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/13 17:31:33 by abquaoub          #+#    #+#             */
+/*   Updated: 2024/06/13 17:33:00 by abquaoub         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+char	*ft_strdup(const char *source)
+{
+	char	*dest;
+	size_t	len;
+	size_t	i;
+
+	len = ft_strlen(source);
+	i = 0;
+	dest = (char *)malloc(len + 1);
+	if (!dest)
+		return (0);
+	while (source[i] != '\0')
+	{
+		dest[i] = source[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+int	ft_check_die(t_philo *philo)
+{
+	int	i;
+	int	flag;
+	int	count;
+
+	i = 0;
+	flag = 1;
+	while (i < philo->monitor->number_of_philo)
+	{
+		count = *(int *)return_flag(&philo[i].counter, philo, 2);
+		if (count < philo->monitor->eat)
+			flag = 0;
+		i++;
+	}
+	return (flag);
+}

@@ -6,7 +6,7 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 18:53:31 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/07 17:57:57 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:32:40 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,34 +115,4 @@ char	*ft_itoa(int n)
 	ft_test(arr, i, len, number);
 	ft_rev(arr);
 	return (arr);
-}
-
-char	*ft_strdup(const char *source)
-{
-	char	*dest;
-	size_t	len;
-	size_t	i;
-
-	len = ft_strlen(source);
-	i = 0;
-	dest = (char *)malloc(len + 1);
-	if (!dest)
-		return (0);
-	while (source[i] != '\0')
-	{
-		dest[i] = source[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
 }
