@@ -6,7 +6,7 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 15:36:54 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/13 18:56:57 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:00:17 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void	ft_fork(t_philo *philo)
 	pthread_mutex_t	*second_take;
 
 	ft_print_message("is thinking", philo);
-	first_take = philo->fork_right;
-	second_take = philo->fork_left;
-	if (philo->id % 2)
-	{
+	// first_take = philo->fork_right;
+	// second_take = philo->fork_left;
+	// if (philo->id % 2)
+	// {
 		first_take = philo->fork_left;
 		second_take = philo->fork_right;
-	}
+	// }
 	pthread_mutex_lock(first_take);
 	ft_print_message("has taken a fork", philo);
 	pthread_mutex_lock(second_take);
@@ -42,8 +42,8 @@ void	*ft_routine(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	if (philo->id % 2)
-		usleep(100);
+	// if (philo->id % 2)
+	// 	usleep(100);
 	while (*(int *)return_flag(&philo->monitor->flag, philo, 0))
 	{
 		if (philo->monitor->number_of_philo == 1)
