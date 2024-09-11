@@ -14,27 +14,21 @@
 
 int	ft_atoi(const char *theString)
 {
-	int	s;
 	int	res;
 	int	i;
 
-	s = 1;
 	res = 0;
 	i = 0;
 	while (theString[i] == ' ' || (theString[i] >= 9 && theString[i] <= 13))
 		i++;
-	if (theString[i] == '-' || theString[i] == '+')
-	{
-		if (theString[i] == '-')
-			s = -1;
+	if (theString[i] == '+')
 		i++;
-	}
 	while ((theString[i] >= '0' && theString[i] <= '9') && theString[i] != '\0')
 	{
 		res = res * 10 + theString[i] - 48;
 		i++;
 	}
-	return (res * s);
+	return (res);
 }
 
 static int	ft_len(long int n)

@@ -6,45 +6,20 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 15:36:54 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/13 19:00:17 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/08/06 11:09:45 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_fork(t_philo *philo)
-{
-	pthread_mutex_t	*first_take;
-	pthread_mutex_t	*second_take;
-
-	ft_print_message("is thinking", philo);
-	// first_take = philo->fork_right;
-	// second_take = philo->fork_left;
-	// if (philo->id % 2)
-	// {
-		first_take = philo->fork_left;
-		second_take = philo->fork_right;
-	// }
-	pthread_mutex_lock(first_take);
-	ft_print_message("has taken a fork", philo);
-	pthread_mutex_lock(second_take);
-	ft_print_message("has taken a fork", philo);
-	ft_edit_var(philo, 0);
-	ft_print_message("is eating", philo);
-	ft_usleep(philo->monitor->time_to_eat);
-	ft_edit_var(philo, 2);
-	pthread_mutex_unlock(first_take);
-	pthread_mutex_unlock(second_take);
-}
 
 void	*ft_routine(void *ptr)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	// if (philo->id % 2)
-	// 	usleep(100);
-	while (*(int *)return_flag(&philo->monitor->flag, philo, 0))
+	if (!(philo->id % 2))
+		usleep(100);
+	while (ft_ff2(philo))
 	{
 		if (philo->monitor->number_of_philo == 1)
 		{
@@ -53,12 +28,12 @@ void	*ft_routine(void *ptr)
 			pthread_mutex_unlock(philo->fork_right);
 			ft_usleep(philo->monitor->time_to_die);
 			ft_print_message("dead", philo);
-			ft_edit_var(philo, 1);
-			break ;
+			return (NULL);
 		}
 		ft_fork(philo);
 		ft_print_message("is sleeping", philo);
 		ft_usleep(philo->monitor->time_to_sleep);
+		usleep(1000);
 	}
 	return (NULL);
 }
@@ -67,7 +42,6 @@ void	*ft_monitor(void *ff)
 {
 	t_philo	*philo;
 	int		i;
-	size_t	last;
 
 	philo = (t_philo *)ff;
 	i = 0;
@@ -75,42 +49,21 @@ void	*ft_monitor(void *ff)
 	{
 		if (i == philo->monitor->number_of_philo)
 			i = 0;
-		last = *(size_t *)return_flag(&philo[i].last_eat, philo, 1);
-		if (last && time_of_day() - last > philo[i].monitor->time_to_die)
+		if (ft_ff1(&philo[i]) && time_of_day()
+			- ft_ff1(&philo[i]) > philo[i].monitor->time_to_die)
 		{
 			ft_print_message("dead", &philo[i]);
-			ft_edit_var(philo, 1);
+			ft_edit(philo);
 			break ;
 		}
-		if (ft_check_die(philo) && philo->monitor->eat != 0)
+		if (ft_check_die(philo) && philo->monitor->eat)
 		{
-			ft_edit_var(philo, 1);
+			ft_edit(philo);
 			break ;
 		}
 		i++;
 	}
 	return (NULL);
-}
-
-void ft_destory(t_philo *philo)
-{
-	int num = philo->monitor->number_of_philo;
-	int i = 0;
-	while(i < num)
-	{
-		pthread_mutex_destroy(philo[i].fork_left );
-		i++;
-	}
-	pthread_mutex_destroy(philo->monitor->mutex_print );
-	pthread_mutex_destroy(philo->monitor->mutex_flag );
-	pthread_mutex_destroy(philo->monitor->counter );
-	pthread_mutex_destroy(philo->monitor->mutex_time );
-	free(philo->monitor->mutex_print );
-	free(philo->monitor->mutex_flag );
-	free(philo->monitor->counter );
-	free(philo->monitor->mutex_time );
-	
-	
 }
 
 void	ft_philo(char **av)
@@ -141,7 +94,7 @@ void	ft_philo(char **av)
 int	main(int ac, char **av)
 {
 	(void)ac;
-	if (check_is_number(av) )
+	if (check_is_number(av) || ac > 6 || ac < 5)
 	{
 		write(2, "Error\n", ft_strlen("Error\n"));
 		return (1);

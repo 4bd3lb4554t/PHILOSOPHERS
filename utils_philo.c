@@ -6,13 +6,27 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:21:51 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/13 18:57:35 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/07/07 10:11:43 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-char	*ft_remove_0(char *str)
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_remove_zero(char *str)
 {
 	int	i;
 
@@ -23,7 +37,7 @@ char	*ft_remove_0(char *str)
 			return (&str[i]);
 		i++;
 	}
-	return (str);
+	return (&str[0]);
 }
 
 int	check_is_number(char **str)
@@ -34,9 +48,9 @@ int	check_is_number(char **str)
 	i = 1;
 	while (str[i])
 	{
-		str[i] = ft_remove_0(str[i]);
+		str[i] = ft_remove_zero(str[i]);
 		it = ft_itoa(ft_atoi(str[i]));
-		if (strcmp(it, str[i]) || ft_atoi(str[i]) == 0) // strcmp 
+		if (ft_strcmp(it, str[i]) || ft_atoi(str[i]) == 0)
 			return (free(it), 1);
 		free(it);
 		i++;
@@ -66,30 +80,6 @@ t_monitor	*ft_init(int number_of_philo, char **av)
 	pthread_mutex_init(monitor->mutex_print, NULL);
 	pthread_mutex_init(monitor->counter, NULL);
 	return (monitor);
-}
-
-void	ft_mutexxx(t_philo *philo)
-{
-	int				philos;
-	pthread_mutex_t	*mxt;
-	int				i;
-
-	i = 0;
-	philos = philo->monitor->number_of_philo;
-	mxt = malloc(sizeof(pthread_mutex_t) * philos);
-	while (i < philos)
-	{
-		pthread_mutex_init(&mxt[i], NULL);
-		i++;
-	}
-	i = 0;
-	while (i < philos)
-	{
-		if (philos > 1)
-			philo[i].fork_left = &(mxt[(i + 1) % philos]);
-		philo[i].fork_right = &(mxt[i]);
-		i++;
-	}
 }
 
 t_philo	*ft_creat_data(char **av)

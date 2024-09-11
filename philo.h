@@ -6,7 +6,7 @@
 /*   By: abquaoub <abquaoub@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 15:37:23 by abquaoub          #+#    #+#             */
-/*   Updated: 2024/06/13 17:31:50 by abquaoub         ###   ########.fr       */
+/*   Updated: 2024/07/07 10:14:49 by abquaoub         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,15 @@ char				*ft_strdup(const char *source);
 size_t				ft_strlen(const char *s);
 void				ft_usleep(size_t time);
 void				ft_print_message(char *str, t_philo *head);
+int					ft_ff2(t_philo *philo);
 size_t				time_of_day(void);
 t_philo				*ft_creat_data(char **av);
-char				*ft_remove_0(char *str);
 int					check_is_number(char **str);
-void				ft_edit_var(t_philo *philo, int flag);
-void				*return_flag(void *number, t_philo *philo, int flag);
+void				ft_mutexxx(t_philo *philo);
+size_t				ft_ff1(t_philo *philo);
+void				ft_edit(t_philo *philo);
+int					ft_ff2(t_philo *philo);
+void				ft_destory(t_philo *philo);
+void				ft_fork(t_philo *philo);
 
 #endif
